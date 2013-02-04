@@ -1,10 +1,6 @@
 #include <QtGui>
 #include <QTextStream>
-#include <log4qt/logger.h>
 #include "mdichild.h"
-#include "gfileexception.h"
-
-using namespace Log4Qt;
 
 MdiChild::MdiChild()
 {
@@ -12,7 +8,6 @@ MdiChild::MdiChild()
     setColumnCount(3);
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
-    isGraph = true;
 }
 
 void MdiChild::newFile()
@@ -21,7 +16,6 @@ void MdiChild::newFile()
     isUntitled = true;
     curFile = tr("matrix%1").arg(sequenceNumber++);
     setWindowTitle(curFile + "[*]");
-    isGraph = true;
     setColumnsTitlesPrefix(tr("Score %1"));
     setRowsTitlesPrefix(tr("Expert %1"));
 }
@@ -42,7 +36,6 @@ bool MdiChild::loadFile(const QString &fileName)
     QApplication::restoreOverrideCursor();
 
     setCurrentFile(fileName);
-    isGraph = true;
     return true;
 }
 
@@ -130,30 +123,6 @@ void MdiChild::setCurrentFile(const QString &fileName)
 QString MdiChild::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
-}
-
-void MdiChild::toGraph()
-{
-    Logger::rootLogger()->info(tr("User select graph-file to open"));
-    if (curGraph != NULL)
-    {
-    }
-    Logger::rootLogger()->info(tr("Application try to create graph from file "));
-    try
-    {
-        curGraph = new Graph(curFile);
-    }
-    catch (GFileException ex)
-    {
-        Logger::rootLogger()->error(ex.getMessage());
-        return;
-    }
-    catch (...)
-    {
-        Logger::rootLogger()->error(tr("Unknown error!"));
-        return;
-    }
-    Logger::rootLogger()->info(tr("Application create graph succefully"));
 }
 
 void MdiChild::setCurFile(QString curFile)

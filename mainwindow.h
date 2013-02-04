@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "mdigraphchild.h"
 #include "alglib/linalg.h"
 #include "alglib/ap.h"
 
@@ -43,6 +44,7 @@ private slots:
     void updateWindowMenu();
     MdiChild *createMdiChild();
     MdiChild *createMdiChild(int n, int m);
+    MdiGraphChild *createMdiGraphChild();
     void switchLayoutDirection();
     void setActiveSubWindow(QWidget *window);
 
