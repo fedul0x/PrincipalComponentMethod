@@ -5,11 +5,11 @@
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(mdi);
+    Q_INIT_RESOURCE(pcm);
 
     QApplication app(argc, argv);
     QTranslator myTranslator;
-    myTranslator.load("mdi_" + QLocale::system().name());
+    myTranslator.load("pcm_" + QLocale::system().name());
     qDebug() << QLocale::system().name();
     app.installTranslator(&myTranslator);
     MainWindow mainWin;

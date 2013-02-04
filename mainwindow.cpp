@@ -234,6 +234,43 @@ void MainWindow::magic()
         }
     }
     childT->show();
+
+    MdiGraphChild *gChild = createMdiGraphChild();
+    gChild->setCurFile(tr("Error by principle component number relation"));
+    alglib::real_2d_array t1;
+    alglib::real_2d_array p1;
+    alglib::real_2d_array res;
+    t1.setlength(t.rows(), 1);
+    p1.setlength(1, t.cols());
+    res.setlength(t.rows(), t.cols());
+    QVector<QPointF> *data = new QVector<QPointF>();
+    for (uint j = 0; j<qMin(t.cols(), t.rows()); j++)
+    {
+        for (uint i = 0; i<t.rows(); i++)
+            t1[i][0] = t[i][j];
+        for (uint i = 0; i<t.cols(); i++)
+            p1[0][i] = vt[j][i];
+//            p1[0][i] = vt[i][j];
+        alglib::rmatrixgemm(t1.rows(), p1.cols(), t1.cols(), 1,
+                            t1, 0, 0, 0,
+                            p1, 0, 0, 0, 0.0,
+                            res, 0, 0);
+        double error = 0.0;
+        for (uint i1 = 0; i1 < res.rows(); i1++)
+            for (uint j1 = 0; j1 < res.cols(); j1++)
+            {
+            a[i1][j1] = a[i1][j1] - res[i1][j1];
+            error += qPow(a[i1][j1], 2);
+        }
+        data->append(*(new QPointF(j+1, error)));
+    }
+//    for (uint i = 0; i<10; i++)
+//    {
+//        data->append(*(new QPointF(i, i*2)));
+//    }
+    gChild->setData(data);
+    gChild->show();
+
     mdiArea->tileSubWindows();
 }
 
@@ -269,8 +306,6 @@ void MainWindow::updateMenus()
         columnSpinBox->setValue(activeMdiChild()->columnCount());
         rowSpinBox->setValue(activeMdiChild()->rowCount());
     }
-
-
 }
 
 void MainWindow::updateWindowMenu()
@@ -318,6 +353,18 @@ MdiChild *MainWindow::createMdiChild()
     connect(child, SIGNAL(copyAvailable(bool)),
             copyAct, SLOT(setEnabled(bool)));
 
+    return child;
+}
+
+MdiGraphChild *MainWindow::createMdiGraphChild()
+{
+    MdiGraphChild *child = new MdiGraphChild;
+    mdiArea->addSubWindow(child);
+
+//    connect(child, SIGNAL(copyAvailable(bool)),
+//            cutAct, SLOT(setEnabled(bool)));
+//    connect(child, SIGNAL(copyAvailable(bool)),
+//            copyAct, SLOT(setEnabled(bool)));
     return child;
 }
 

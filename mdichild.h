@@ -3,7 +3,6 @@
 
 #include <QTextEdit>
 #include <QTableWidget>
-#include "graph.h"
 
 class MdiChild : public QTableWidget
 {
@@ -23,7 +22,6 @@ public:
 
     QString userFriendlyCurrentFile();
     QString currentFile() { return curFile; }
-    Graph *curGraph;
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -32,7 +30,6 @@ private slots:
     void documentWasModified();
 
 public slots:
-    void toGraph();
     void setColumnCount(int columns);
     void setRowCount(int rows);
     void copy();
@@ -46,7 +43,6 @@ private:
     QString rowsTitlesPrefix;
     QString curFile;
     bool isUntitled;
-    bool isGraph;
 
 };
 
